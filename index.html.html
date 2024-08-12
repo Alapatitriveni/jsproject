@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock-Paper-Scissors Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            background-color: #2d2d2d;
+            color: white;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .scoreboard {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .score {
+            margin: 0 10px;
+        }
+
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .option {
+            cursor: pointer;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s ease-in-out;
+        }
+
+        .option:hover {
+            transform: scale(1.2);
+        }
+
+        .option img {
+            width: 130px;
+            height: 130px;
+            background-color: white;
+        }
+
+        .message {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #2d2d2d;
+            color: white;
+        }
+
+        .reset-button {
+            margin-top: 1rem;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reset-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rock-Paper-Scissors</h1>
+        <div class="scoreboard">
+            <div class="score">
+                <p id="playerScore">0</p>
+                <p>You</p>
+            </div>
+            <div class="score">
+                <p id="computerScore">0</p>
+                <p>Computer</p>
+            </div>
+        </div>
+        <div class="options">
+            <div class="option" id="rock">
+                <img src="rock.png" alt="Rock">
+            </div>
+            <div class="option" id="paper">
+                <img src="paper.webp" alt="Paper">
+            </div>
+            <div class="option" id="scissors">
+                <img src="scissor.png" alt="Scissors">
+            </div>
+        </div>
+        <div class="message">
+            <p id="message">Choose your move</p>
+        </div>
+        <button class="reset-button" id="resetButton">Reset</button>
+    </div>
+
+    <script>
+        let playerScore = 0;
+        let computerScore = 0;
+
+        const playerScoreElement = document.getElementById('playerScore');
+        const computerScoreElement = document.getElementById('computerScore');
+        const messageElement = document.getElementById('message');
+        const resetButton = document.getElementById('resetButton');
+
+        const options = document.querySelectorAll('.option');
+
+        options.forEach(option => {
+            option.addEventListener('click', function() {
+                const playerChoice = this.id;
+                const computerChoice = generateComputerChoice();
+                const result = getResult(playerChoice, computerChoice);
+                updateScore(result);
+                updateMessage(result, playerChoice, computerChoice);
+            });
+        });
+
+        resetButton.addEventListener('click', resetGame);
+
+        function generateComputerChoice() {
+            const choices = ['rock', 'paper', 'scissors'];
+            const randomIndex = Math.floor(Math.random() * 3);
+            return choices[randomIndex];
+        }
+
+        function getResult(player, computer) {
+            if (player === computer) {
+                return 'draw';
+            } else if (
+                (player === 'rock' && computer === 'scissors') ||
+                (player === 'paper' && computer === 'rock') ||
+                (player === 'scissors' && computer === 'paper')
+            ) {
+                return 'win';
+            } else {
+                return 'lose';
+            }
+        }
+
+        function updateScore(result) {
+            if (result === 'win') {
+                playerScore++;
+            } else if (result === 'lose') {
+                computerScore++;
+            }
+            playerScoreElement.textContent = playerScore;
+            computerScoreElement.textContent = computerScore;
+        }
+
+        function updateMessage(result, playerChoice, computerChoice) {
+            switch (result) {
+                case 'win':
+                    messageElement.textContent = `You win! ${playerChoice} beats ${computerChoice}.`;
+                    messageElement.style.backgroundColor = 'green';
+                    break;
+                case 'lose':
+                    messageElement.textContent = `You lose! ${computerChoice} beats ${playerChoice}.`;
+                    messageElement.style.backgroundColor = 'red';
+                    break;
+                case 'draw':
+                    messageElement.textContent = `It's a draw! Both chose ${playerChoice}.`;
+                    messageElement.style.backgroundColor = '#2d2d2d';
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function resetGame() {
+            playerScore = 0;
+            computerScore = 0;
+            playerScoreElement.textContent = playerScore;
+            computerScoreElement.textContent = computerScore;
+            messageElement.textContent = 'Choose your move';
+            messageElement.style.backgroundColor = '#2d2d2d';
+        }
+    </script>
+</body>
+</html>
+
